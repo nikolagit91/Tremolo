@@ -6,7 +6,7 @@ sudo apt-get install libsndfile1-dev
 
 
 
-POKRETANJE ZA WAV (C++):
+KOMPAJLIRANJE & POKRETANJE ZA WAV (C++):
 	
 	g++ -o tremolo tremolo.cpp 
 
