@@ -1,0 +1,47 @@
+ZA tremolo_sndfile.c :
+
+	sudo apt-get install libsndfile1
+	ili
+	sudo apt-get install libsndfile1-dev
+
+
+
+
+
+
+KOMPAJLIRANJE & POKRETANJE tremolo.cpp :
+	
+	g++ -o tremolo tremolo.cpp 
+
+	./tremolo input.wav depth(0-32768) rate(0-22050) izlaz.wav
+
+
+
+
+KOMPAJLIRANJE & POKRETANJE tremolo_sndfile.c :
+
+	gcc -o tremolo tremolo.c -lsndfile -lm
+
+	./tremolo input.wav depth(0-32768) rate(0-22050) output.wav 
+	
+	PRIMER ===>	 ./tremolo back_in_black.wav 15000 30 izlaz.wav
+		
+	
+	
+	
+
+KOMPAJLIRANJE & POKRETANJE tremolo.c :
+
+	gcc -o tremolo tremolo.c  -lm
+
+	./tremolo input.wav depth(0-32768) rate(0-22050) output.wav
+
+
+
+
+
+
+
+
+
+
