@@ -18,18 +18,18 @@ int main(int argc, char *argv[]) {
     
     //ucitavanje argumenata
     const char* inputFilename = argv[1];
-    int depth = atoi(argv[2]);
-    float rate = atof(argv[3]);
-    const char* outputFilename = argv[4];
+    const char* outputFilename = argv[2];
+    float frequency = atof(argv[3]); 
+    float tremolo_depth = atof(argv[4]); 	 // 0.0-.1.0
  
-    
+   
     //otvaranje ulaznog fajla
     SNDFILE* inputFile = sf_open(inputFilename, SFM_READ, &sfinfo);
     
    
     
     if (!inputFile) {
-        fprintf(stderr, "Error: failed to open input file %s\n", inputFilename);
+        fprintf(stderr, "Neuspesno otvaranje %s\n fajla\n", inputFilename);
         return 1;
     }
     
@@ -40,12 +40,12 @@ int main(int argc, char *argv[]) {
     
     
 
-
-    if (/*inputFileInfo.format != SF_FORMAT_WAV|| */ inputFileInfo.channels != 2 || inputFileInfo.samplerate != 44100) {
-        fprintf(stderr, "Error: unsupported audio format\n");
+    if ( inputFileInfo.channels != 2 || inputFileInfo.samplerate != 44100) {
+        fprintf(stderr, "Pogresan format audio fajla\n");
         sf_close(inputFile);
         return 1;
     }
+
 
     //generisanje ulaznog bafera 
     int numFrames = inputFileInfo.frames;
@@ -63,17 +63,21 @@ int main(int argc, char *argv[]) {
     }
 
     //TREMOLO efekat
-    const float maxDepth = 32767.0;
-    const float delta = 2.0 * PI * rate / inputFileInfo.samplerate;
-    float depthFactor;
+    float t = 0;
+    float tremolo_rate = 2.0 * PI * frequency / inputFileInfo.samplerate;
     float* outputBuffer = malloc(numSamples * sizeof(float));
-
-    for (int i = 0; i < numSamples; i += 2) {
-        float phase = sin(delta * i);
-        depthFactor = 1.0 - (depth / maxDepth) * phase;
-        outputBuffer[i] = inputBuffer[i] * depthFactor;
-        outputBuffer[i + 1] = inputBuffer[i + 1] * depthFactor;
+    
+    for (int i = 0; i < numSamples; i += inputFileInfo.channels) {
+        
+        float trem_factor = 1.0 - (tremolo_depth *(0.5 * sinf(t) + 0.5));
+        t += tremolo_rate;
+        
+        if (t > 2 * PI) t -= 2 * PI;
+        
+        outputBuffer[i] = inputBuffer[i] * trem_factor;
+        outputBuffer[i + 1] = inputBuffer[i + 1] * trem_factor;
     }
+
 
     //generisanje otuputFileInfo struct-a sa istim parametrima kao inputFileInfo
     SF_INFO outputFileInfo = inputFileInfo;

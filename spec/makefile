@@ -8,7 +8,7 @@ tremolo.o: tremolo.c
 
 .PHONY: run
 run:
-	./tremolo ../data/Voodoo_Child.wav 15000 1200 izlaz.wav
+	./tremolo ../data/np_sample.wav izlaz.wav 4 0.6
 
 
 .PHONY: clean
